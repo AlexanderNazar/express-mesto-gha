@@ -30,7 +30,8 @@ const createCard = (req, res) => {
 };
 
 const deleteCard = (req, res) => {
-  Card.findOneAndRemove(req.params.cardId)
+  const { cardId } = req.params;
+  Card.findByIdAndRemove(cardId)
     .orFail(() => {
       throw new NotFoundError('Попытка удалить несуществующую карточку');
     })
