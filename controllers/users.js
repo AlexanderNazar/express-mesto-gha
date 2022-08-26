@@ -13,7 +13,7 @@ const getUsers = (req, res) => {
 };
 
 const getUserOnId = (req, res) => {
-  User.findById(req.params.id)
+  User.findById(req.params.userId)
     .orFail(() => {
       throw new NotFoundError('Пользователь не найден');
     })
@@ -22,6 +22,10 @@ const getUserOnId = (req, res) => {
       if (err.name === 'NotFoundError') {
         res.status(NOT_FOUND_CODE).send({
           message: err.message,
+        });
+      } else if (err.name === 'CastError') {
+        res.status(BAD_REQUEST_CODE).send({
+          message: 'Некорректно передан id пользователя',
         });
       } else {
         res.status(SERVER_ERROR_CODE).send({

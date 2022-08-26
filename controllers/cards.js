@@ -40,6 +40,10 @@ const deleteCard = (req, res) => {
         res.status(NOT_FOUND_CODE).send({
           message: err.message,
         });
+      } else if (err.name === 'CastError') {
+        res.status(BAD_REQUEST_CODE).send({
+          message: 'Некорректно передан id карточки',
+        });
       } else {
         res.status(SERVER_ERROR_CODE).send({
           message: 'Произошла ошибка на стороне сервера',
@@ -67,6 +71,10 @@ const likeCard = (req, res) => {
         res.status(NOT_FOUND_CODE).send({
           message: err.message,
         });
+      } else if (err.name === 'CastError') {
+        res.status(BAD_REQUEST_CODE).send({
+          message: 'Некорректно передан id карточки',
+        });
       } else {
         res.status(SERVER_ERROR_CODE).send({
           message: 'Произошла ошибка на стороне сервера',
@@ -93,6 +101,10 @@ const dislikeCard = (req, res) => {
       } else if (err.name === 'NotFoundError') {
         res.status(NOT_FOUND_CODE).send({
           message: err.message,
+        });
+      } else if (err.name === 'CastError') {
+        res.status(BAD_REQUEST_CODE).send({
+          message: 'Некорректно передан id карточки',
         });
       } else {
         res.status(SERVER_ERROR_CODE).send({
