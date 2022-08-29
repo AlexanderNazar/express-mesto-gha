@@ -6,7 +6,7 @@ const {
 
 const getCards = (req, res) => {
   Card.find({})
-    .then((cards) => res.status(200).send({ data: cards }))
+    .then((cards) => res.send({ data: cards }))
     .catch(() => res.status(SERVER_ERROR_CODE).send({
       message: 'Произошла ошибка на стороне сервера',
     }));
@@ -19,7 +19,7 @@ const createCard = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(BAD_REQUEST_CODE).send({
-          message: 'Переданы некорректные данные при создании карточки',
+          message: err.message,
         });
       } else {
         res.status(SERVER_ERROR_CODE).send({
@@ -35,7 +35,7 @@ const deleteCard = (req, res) => {
     .orFail(() => {
       throw new NotFoundError('Попытка удалить несуществующую карточку');
     })
-    .then((card) => res.status(200).send({ data: card }))
+    .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         res.status(NOT_FOUND_CODE).send({
@@ -62,11 +62,11 @@ const likeCard = (req, res) => {
     .orFail(() => {
       throw new NotFoundError('Попытка внести изменения в данные несуществующей карточки');
     })
-    .then((card) => res.status(200).send({ data: card }))
+    .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(BAD_REQUEST_CODE).send({
-          message: 'Передан некорректный id в метод лайка карточки',
+          message: err.message,
         });
       } else if (err.name === 'NotFoundError') {
         res.status(NOT_FOUND_CODE).send({
@@ -93,11 +93,11 @@ const dislikeCard = (req, res) => {
     .orFail(() => {
       throw new NotFoundError('Попытка внести изменения в данные несуществующей карточки');
     })
-    .then((card) => res.status(200).send({ data: card }))
+    .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(BAD_REQUEST_CODE).send({
-          message: 'Передан некорректный id в метод дизлайка карточки',
+          message: err.message,
         });
       } else if (err.name === 'NotFoundError') {
         res.status(NOT_FOUND_CODE).send({

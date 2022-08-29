@@ -26,8 +26,8 @@ app.use((req, res, next) => {
 
   next();
 });
-app.use('/', userRouter);
-app.use('/', cardRouter);
+app.use('/users', userRouter);
+app.use('/cards', cardRouter);
 app.use('*', (req, res) => {
   res.status(NOT_FOUND_CODE).send({
     message: 'Страница не найдена',

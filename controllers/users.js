@@ -6,7 +6,7 @@ const {
 
 const getUsers = (req, res) => {
   User.find({})
-    .then((users) => res.status(200).send({ data: users }))
+    .then((users) => res.send({ data: users }))
     .catch(() => res.status(SERVER_ERROR_CODE).send({
       message: 'Произошла ошибка на стороне сервера',
     }));
@@ -17,7 +17,7 @@ const getUserOnId = (req, res) => {
     .orFail(() => {
       throw new NotFoundError('Пользователь не найден');
     })
-    .then((user) => res.status(200).send({ data: user }))
+    .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         res.status(NOT_FOUND_CODE).send({
@@ -42,7 +42,7 @@ const createUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(BAD_REQUEST_CODE).send({
-          message: 'Переданы некорректные данные при создании пользователя',
+          message: err.message,
         });
       } else {
         res.status(SERVER_ERROR_CODE).send({
@@ -65,11 +65,11 @@ const updateUser = (req, res) => {
     .orFail(() => {
       throw new NotFoundError('Попытка внести изменения в данные несуществующего пользователя');
     })
-    .then((user) => res.status(200).send({ data: user }))
+    .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(BAD_REQUEST_CODE).send({
-          message: 'Переданы некорректные данные при попытке изменения данных пользователя',
+          message: err.message,
         });
       } else if (err.name === 'NotFoundError') {
         res.status(NOT_FOUND_CODE).send({
@@ -96,11 +96,11 @@ const updateAvatar = (req, res) => {
     .orFail(() => {
       throw new NotFoundError('Попытка внести изменения в данные несуществующего пользователя');
     })
-    .then((user) => res.status(200).send({ data: user }))
+    .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(BAD_REQUEST_CODE).send({
-          message: 'Переданы некорректные данные при попытке изменения данных пользователя',
+          message: err.message,
         });
       } else if (err.name === 'NotFoundError') {
         res.status(NOT_FOUND_CODE).send({
