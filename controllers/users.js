@@ -129,7 +129,8 @@ const login = (req, res, next) => {
         maxAge: 604800,
         httpOnly: true,
         sameSite: true,
-      }).end();
+      });
+      res.send({ message: 'Вход выполнен успешно!' });
     })
     .catch((err) => {
       next(new UnautorizedError(err.message));
