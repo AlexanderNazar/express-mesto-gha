@@ -2,9 +2,9 @@ const Card = require('../models/card');
 
 const NotFoundError = require('../Errors/NotFoundError');
 
-const UnautorizedError = require('../Errors/UnautorizedError');
-
 const BadRequestError = require('../Errors/BadRequestError');
+
+const ForbiddenError = require('../Errors/ForbiddenError');
 
 const getCards = (req, res, next) => {
   Card.find({})
@@ -31,7 +31,7 @@ const deleteCard = (req, res, next) => {
     })
     .then((card) => {
       if (req.user._id !== card.owner.toString()) {
-        throw new UnautorizedError('Попытка удалить карточку, созданную другим пользователем');
+        throw new ForbiddenError('Попытка удалить карточку, созданную другим пользователем');
       } Card.findByIdAndRemove(cardId)
         .then((cards) => res.send({ data: cards }))
         .catch(next);
@@ -58,8 +58,6 @@ const likeCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError(`Введены некорректные данные: ${err.message}`));
-      } else if (err.name === 'NotFoundError') {
-        next(new NotFoundError(err.massage));
       } else if (err.name === 'CastError') {
         next(new BadRequestError('Некорректно передан id карточки'));
       } else next(err);
@@ -80,8 +78,6 @@ const dislikeCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError(`Введены некорректные данные: ${err.message}`));
-      } else if (err.name === 'NotFoundError') {
-        next(new NotFoundError(err.massage));
       } else if (err.name === 'CastError') {
         next(new BadRequestError('Некорректно передан id карточки'));
       } else next(err);
