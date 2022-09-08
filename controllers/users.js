@@ -6,8 +6,6 @@ const User = require('../models/user');
 
 const NotFoundError = require('../Errors/NotFoundError');
 
-const UnautorizedError = require('../Errors/UnautorizedError');
-
 const BadRequestError = require('../Errors/BadRequestError');
 
 const ConflictError = require('../Errors/ConflictError');
@@ -131,9 +129,7 @@ const login = (req, res, next) => {
       });
       res.send({ message: 'Вход выполнен успешно!' });
     })
-    .catch((err) => {
-      next(new UnautorizedError(err.message));
-    });
+    .catch(next);
 };
 
 module.exports = {

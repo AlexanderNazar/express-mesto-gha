@@ -8,6 +8,7 @@ const ForbiddenError = require('../Errors/ForbiddenError');
 
 const getCards = (req, res, next) => {
   Card.find({})
+    .populate(['likes', 'owner'])
     .then((cards) => res.send({ data: cards }))
     .catch(next);
 };
@@ -40,8 +41,7 @@ const deleteCard = (req, res, next) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Некорректно передан id карточки'));
       } else next(err);
-    })
-    .catch(next);
+    });
 };
 
 const likeCard = (req, res, next) => {
@@ -51,6 +51,7 @@ const likeCard = (req, res, next) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
+    .populate(['likes', 'owner'])
     .orFail(() => {
       throw new NotFoundError('Попытка внести изменения в данные несуществующей карточки');
     })
@@ -71,6 +72,7 @@ const dislikeCard = (req, res, next) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
+    .populate(['likes', 'owner'])
     .orFail(() => {
       throw new NotFoundError('Попытка внести изменения в данные несуществующей карточки');
     })
